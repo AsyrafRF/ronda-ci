@@ -3,6 +3,8 @@
 import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
+import { launch } from 'chrome-launcher';
+import lighthouse from 'lighthouse';
 
 // 1. Pengaturan standar (default) jika user tidak membuat file config
 const DEFAULT_CONFIG = {
@@ -60,29 +62,35 @@ async function optimizeImages() {
 // ==========================================
 // FUNGSI 2: CEK SKOR PERFORMA (GOOGLE PSI)
 // ==========================================
-async function checkPerformanceBudget(urlToTest, targetScore) {
-  // Jika user tidak mengisi URL di config, gunakan default example.com
-  const finalUrl = urlToTest || "https://example.com";
+async function checkLocalPerformance(urlToTest, targetScore) {
+  console.log(`🔍 Melakukan audit internal Lighthouse pada: ${urlToTest}...`);
 
-  console.log(`🌐 Meminta Google PageSpeed Insights untuk menganalisis: ${finalUrl}...`);
+  // 1. Jalankan browser Chrome di latar belakang secara otomatis
+  const chrome = await launch({ chromeFlags: ['--headless'] });
+
+  const options = {
+    logLevel: 'info',
+    output: 'json',
+    onlyCategories: ['performance'],
+    port: chrome.port
+  };
 
   try {
-    const apiUrl = `https://googleapis.com{encodeURIComponent(finalUrl)}&category=PERFORMANCE`;
-    const response = await fetch(apiUrl);
-    const data = await response.json();
+    // 2. Jalankan audit Lighthouse secara lokal tanpa internet
+    const runnerResult = await lighthouse(urlToTest, options);
+    const currentScore = Math.round(runnerResult.lhc.categories.performance.score * 100);
 
-    const currentScore = Math.round(data.lighthouseResult.categories.performance.score * 100);
-    console.log(`📊 Skor Performa Saat Ini: ${currentScore}/100`);
+    console.log(`📊 Skor Performa Lokal: ${currentScore}/100`);
+    await chrome.kill();
 
     if (currentScore < targetScore) {
-      console.error(`❌ GAGAL: Skor Performa (${currentScore}) di bawah batas minimum Anda (${targetScore})!`);
+      console.error(`❌ GAGAL: Skor di bawah batas anggaran kualitas!`);
       return false;
     }
-
-    console.log(`🎉 AMAN: Skor Performa memenuhi anggaran kualitas Anda.`);
     return true;
   } catch (error) {
-    console.error("❌ Gagal terhubung ke Google PageSpeed API:", error.message);
+    console.error("❌ Gagal menjalankan audit internal:", error.message);
+    await chrome.kill();
     return false;
   }
 }
@@ -122,7 +130,7 @@ async function main() {
   }
 
   // 2. Jalankan audit performa web
-  const isPerformancePassed = await checkPerformanceBudget(
+  const isPerformancePassed = await checkLocalPerformance(
     userConfig.url,
     userConfig.budgets.performance
   );

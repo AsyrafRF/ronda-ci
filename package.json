@@ -26,6 +26,7 @@
   "author": "AsyrafRF",
   "license": "MIT",
   "dependencies": {
+    "lighthouse": "^13.4.0",
     "sharp": "^0.35.1"
   },
   "engines": {
