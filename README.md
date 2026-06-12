@@ -9,10 +9,10 @@
 
 ## 🚀 Key Features
 
-*   **Automated Asset Optimization**: Automatically compresses images, minifies scripts, and optimizes critical CSS on every build.
-*   **Quality Gatekeeper**: Fails the CI/CD pipeline if performance budgets (like Lighthouse scores or Web Vitals) drop below your limits.
-*   **Zero Config (Almost)**: Works out of the box with sensible defaults for modern web apps.
-*   **CI/CD Ready**: Built-in support for GitHub Actions, GitLab CI, and Bitbucket Pipelines.
+* **Automated Asset Optimization**: Automatically compresses images, minifies scripts, and optimizes critical CSS on every build.
+* **Quality Gatekeeper**: Fails the CI/CD pipeline if performance budgets (like Lighthouse scores or Web Vitals) drop below your limits.
+* **Zero Config (Almost)**: Works out of the box with sensible defaults for modern web apps.
+* **CI/CD Ready**: Built-in support for GitHub Actions, GitLab CI, and Bitbucket Pipelines.
 
 ## 📦 Installation
 
@@ -25,6 +25,7 @@ npm install --save-dev ronda-ci
 ## 🛠️ Quick Start
 
 ### 1. Create a configuration file
+
 Create a `ronda.config.json` in your root project:
 
 ```json
@@ -41,6 +42,7 @@ Create a `ronda.config.json` in your root project:
 ```
 
 ### 2. Add to your CI/CD Pipeline (e.g., GitHub Actions)
+
 Add `ronda-ci` right after your build step:
 
 ```yaml
