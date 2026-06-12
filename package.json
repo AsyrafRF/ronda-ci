@@ -1,0 +1,29 @@
+{
+  "name": "ronda-ci",
+  "version": "1.0.0",
+  "description": "Continuous web quality optimization and guarding in your CI/CD pipelines",
+  "type": "module",
+  "main": "./lib/index.js",
+  "bin": {
+    "ronda-ci": "./bin/ronda.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ronda",
+    "ci-cd",
+    "web-performance",
+    "optimization",
+    "automation",
+    "nodejs",
+    "github-actions"
+  ],
+  "author": "AsyrafRF",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
