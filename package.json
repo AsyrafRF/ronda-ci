@@ -21,8 +21,9 @@
   ],
   "author": "AsyrafRF",
   "license": "MIT",
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "sharp": "^0.35.1"
+  },
   "engines": {
     "node": ">=18.0.0"
   }
