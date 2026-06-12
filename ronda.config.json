@@ -1,0 +1,10 @@
+{
+  "$schema": "https://schemastore.org",
+  "optimize": {
+    "images": true,
+    "minifyHtml": true
+  },
+  "budgets": {
+    "performance": 90
+  }
+}
