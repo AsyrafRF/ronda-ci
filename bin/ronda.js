@@ -20,7 +20,7 @@ const DEFAULT_CONFIG = {
 // ==========================================
 async function optimizeImages() {
   const targetDir = path.join(process.cwd(), 'dist', 'images'); // Asumsi folder output web user
-  
+
   if (!fs.existsSync(targetDir)) {
     console.log("⚠️  Folder 'dist/images' tidak ditemukan. Lewati optimasi gambar.");
     return;
@@ -60,23 +60,23 @@ async function optimizeImages() {
 // ==========================================
 // FUNGSI 2: CEK SKOR PERFORMA (GOOGLE PSI)
 // ==========================================
-async function checkPerformanceBudget(targetScore) {
-  // Catatan: Di CI/CD asli, user biasanya memasang URL staging sementara mereka
-  const urlToTest = "https://example.com"; 
-  console.log(`🌐 Meminta Google PageSpeed Insights untuk menganalisis: ${urlToTest}...`);
+async function checkPerformanceBudget(urlToTest, targetScore) {
+  // Jika user tidak mengisi URL di config, gunakan default example.com
+  const finalUrl = urlToTest || "https://example.com";
+
+  console.log(`🌐 Meminta Google PageSpeed Insights untuk menganalisis: ${finalUrl}...`);
 
   try {
-    const apiUrl = `https://googleapis.com{encodeURIComponent(urlToTest)}&category=PERFORMANCE`;
+    const apiUrl = `https://googleapis.com{encodeURIComponent(finalUrl)}&category=PERFORMANCE`;
     const response = await fetch(apiUrl);
     const data = await response.json();
 
-    // Mengambil skor performa (Skala API adalah 0 sampai 1.0, jadi kita kali 100)
     const currentScore = Math.round(data.lighthouseResult.categories.performance.score * 100);
     console.log(`📊 Skor Performa Saat Ini: ${currentScore}/100`);
 
     if (currentScore < targetScore) {
       console.error(`❌ GAGAL: Skor Performa (${currentScore}) di bawah batas minimum Anda (${targetScore})!`);
-      return false; // Angka anggaran bocor
+      return false;
     }
 
     console.log(`🎉 AMAN: Skor Performa memenuhi anggaran kualitas Anda.`);
@@ -86,6 +86,7 @@ async function checkPerformanceBudget(targetScore) {
     return false;
   }
 }
+
 
 // ==========================================
 // ALUR UTAMA (MAIN FLOW)
@@ -114,14 +115,17 @@ async function main() {
   }
 
   console.log("\n🔍 Memulai pengecekan kualitas web...");
-  
+
   // 1. Jalankan kompresi gambar jika aktif
   if (userConfig.optimize.images) {
     await optimizeImages();
   }
 
   // 2. Jalankan audit performa web
-  const isPerformancePassed = await checkPerformanceBudget(userConfig.budgets.performance);
+  const isPerformancePassed = await checkPerformanceBudget(
+    userConfig.url,
+    userConfig.budgets.performance
+  );
 
   // 3. Penentu kelulusan pipa CI/CD
   if (!isPerformancePassed) {

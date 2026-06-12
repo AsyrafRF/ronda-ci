@@ -1,5 +1,6 @@
 {
   "$schema": "https://schemastore.org",
+  "url": "https://example.com",
   "optimize": {
     "images": true,
     "minifyHtml": true

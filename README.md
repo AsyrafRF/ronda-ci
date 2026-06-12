@@ -30,6 +30,8 @@ Create a `ronda.config.json` in your root project:
 
 ```json
 {
+  "$schema": "https://schemastore.org",
+  "url": "https://yoursite.com",
   "optimize": {
     "images": true,
     "minifyHtml": true
@@ -40,6 +42,8 @@ Create a `ronda.config.json` in your root project:
   }
 }
 ```
+
+> Change `url` to your site
 
 ### 2. Add to your CI/CD Pipeline (e.g., GitHub Actions)
 
